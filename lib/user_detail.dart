@@ -7,11 +7,31 @@ class UserDetail extends StatefulWidget {
 }
 
 class _UserDetailState extends State<UserDetail> {
+  final Map<String, Marker> _markers = {};
+
   bool phoneVisible = true;
   bool addressVisible = false;
 
   var colorGrey = Color(0xfff6f6f6);
   var colorBlue = Color(0xff5098e4);
+
+  @override
+  void initState() {
+    super.initState();
+
+    _markers.clear();
+
+    final marker = Marker(
+      markerId: MarkerId("Martin"),
+      position: LatLng(11.538036, 104.8397505),
+      infoWindow: InfoWindow(
+        title: "Mr.Andy Holt",
+        snippet: "hello",
+      ),
+    );
+
+    _markers["Mr.Andy Holt"] = marker;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +55,17 @@ class _UserDetailState extends State<UserDetail> {
 
   _renderMap() {
     return Container(
-      color: Colors.red,
       height: 180,
+      child: GoogleMap(
+        mapType: MapType.terrain,
+        initialCameraPosition: CameraPosition(
+          target: LatLng(11.538036, 104.8397505),
+          zoom: 14,
+        ),
+        myLocationButtonEnabled: false,
+        compassEnabled: false,
+        markers: _markers.values.toSet(),
+      ),
     );
   }
 
@@ -52,7 +81,7 @@ class _UserDetailState extends State<UserDetail> {
               borderRadius: BorderRadius.only( topLeft: Radius.circular(20), topRight: Radius.circular(20) ),
               boxShadow: [
                 BoxShadow(
-                  blurRadius: 5,
+                  blurRadius: 2,
                   spreadRadius: 0.5,
                   offset: Offset(0, 0),
                   color: Colors.black.withOpacity(0.5),
