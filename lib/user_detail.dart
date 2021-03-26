@@ -77,7 +77,7 @@ class _UserDetailState extends State<UserDetail> {
           zoom: 1,
         ),
         compassEnabled: false,
-        scrollGesturesEnabled: false,
+        scrollGesturesEnabled: true,
         myLocationButtonEnabled: false,
         markers: _markers.values.toSet(),
       ),
