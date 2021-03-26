@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:randomapiusers/randomuserhelper.dart';
+import 'package:intl/intl.dart';
 
 class UserDetail extends StatefulWidget {
+  final Result userDetails;
+
+  UserDetail({ this.userDetails });
+
   @override
   _UserDetailState createState() => _UserDetailState();
 }
@@ -21,23 +27,28 @@ class _UserDetailState extends State<UserDetail> {
 
     _markers.clear();
 
+    final userName = '${widget.userDetails.name.title}.${widget.userDetails.name.first} ${widget.userDetails.name.last}';
+    final description = '${widget.userDetails.location.timezone.description}';
+    final latitute = double.parse(widget.userDetails.location.coordinates.latitude);
+    final longitude = double.parse(widget.userDetails.location.coordinates.longitude);
+
     final marker = Marker(
-      markerId: MarkerId("Martin"),
-      position: LatLng(11.538036, 104.8397505),
+      markerId: MarkerId(userName),
+      position: LatLng(latitute, longitude),
       infoWindow: InfoWindow(
-        title: "Mr.Andy Holt",
-        snippet: "hello",
+        title: userName,
+        snippet: description,
       ),
     );
 
-    _markers["Mr.Andy Holt"] = marker;
+    _markers[userName] = marker;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("User Detail Page"),
+        title: Text("Detail Page"),
         backgroundColor: colorBlue,
       ),
       body: _renderBody(),
@@ -48,28 +59,32 @@ class _UserDetailState extends State<UserDetail> {
     return Stack(
       children: <Widget>[
         _renderMap(),
-        _renderUserPanel(),
+        _renderUserCard(),
       ],
     );
   }
 
   _renderMap() {
+    final latitute = double.parse(widget.userDetails.location.coordinates.latitude);
+    final longitude = double.parse(widget.userDetails.location.coordinates.longitude);
+
     return Container(
       height: 180,
       child: GoogleMap(
         mapType: MapType.terrain,
         initialCameraPosition: CameraPosition(
-          target: LatLng(11.538036, 104.8397505),
-          zoom: 14,
+          target: LatLng(latitute, longitude),
+          zoom: 1,
         ),
-        myLocationButtonEnabled: false,
         compassEnabled: false,
+        scrollGesturesEnabled: false,
+        myLocationButtonEnabled: false,
         markers: _markers.values.toSet(),
       ),
     );
   }
 
-  _renderUserPanel() {
+  _renderUserCard() {
     return Column(
       children: <Widget>[
         Container(
@@ -93,7 +108,6 @@ class _UserDetailState extends State<UserDetail> {
               children: <Widget>[
                 Column(
                   children: <Widget>[
-                    _renderPanelBar(),
                     _renderUserGeneralInfo(),
                     _renderTabs(),
                   ],
@@ -108,26 +122,15 @@ class _UserDetailState extends State<UserDetail> {
     );
   }
 
-  _renderPanelBar() {
-    return Container(
-      width: 50,
-      height: 5,
-      margin: EdgeInsets.only( top: 10 ),
-      decoration: BoxDecoration( color: colorGrey, borderRadius: BorderRadius.circular(50)),
-    );
-  }
-
   _renderUserGeneralInfo() {
     return Container(
-      height: 160,
+      height: 175,
       child: Row(
         children: <Widget>[
           _renderImage(),
           Row(
             children: [
-              _renderTitle(),
-              SizedBox(width: 10),
-              _renderInfo(),
+              _renderUserInfo(),
             ],
           )
         ],
@@ -136,38 +139,41 @@ class _UserDetailState extends State<UserDetail> {
   }
 
   _renderImage() {
+    final userImage = '${widget.userDetails.picture.large}';
+
     return Container(
-      width: 100,
-      height: 100,
-      margin: EdgeInsets.only( left: 20, right: 10 ),
-      child: Image.network("https://randomuser.me/api/portraits/men/74.jpg"),
+      width: 120,
+      height: 120,
+      margin: EdgeInsets.only( left: 20, right: 20 ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        image: DecorationImage(
+          image: NetworkImage(userImage),
+          fit: BoxFit.cover
+        ),
+      ),
     );
   }
 
-  _renderTitle() {
+  _renderUserInfo() {
+    final userName = '${widget.userDetails.name.title}.${widget.userDetails.name.first} ${widget.userDetails.name.last}';
+    final gender = toBeginningOfSentenceCase('${widget.userDetails.gender}');
+
+    final DateFormat formatter = DateFormat('dd MMM yyyy');
+    final String formatted = formatter.format(widget.userDetails.dob.date);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Container( child: Text("Name :", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)) ),
-        SizedBox(height: 17),
-        Container( child: Text("Gender :", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)) ),
-        SizedBox(height: 17),
-        Container( child: Text("Date of Birth :", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)) ),
-      ],
-    );
-  }
-
-  _renderInfo() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Container( child: Text("Mr.Andy Holt", style: TextStyle(fontSize: 16, color: Colors.white)) ),
-        SizedBox(height: 17),
-        Container( child: Text("Male", style: TextStyle(fontSize: 16, color: Colors.white)) ),
-        SizedBox(height: 17),
-        Container( child: Text("19 Feb 1999", style: TextStyle(fontSize: 16, color: Colors.white)) ),
+        Container( child: Text("Name", style: TextStyle(fontSize: 11, color: Colors.white)) ),
+        Container( child: Text(userName, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)) ),
+        SizedBox(height: 8),
+        Container( child: Text("Gender", style: TextStyle(fontSize: 11, color: Colors.white)) ),
+        Container( child: Text(gender, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)) ),
+        SizedBox(height: 8),
+        Container( child: Text("Date of Birth", style: TextStyle(fontSize: 11, color: Colors.white)) ),
+        Container( child: Text(formatted, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)) ),
       ],
     );
   }
@@ -232,28 +238,24 @@ class _UserDetailState extends State<UserDetail> {
 
   _renderPhoneInfo() {
     final screenHeight = MediaQuery.of(context).size.height;
+    final email = '${widget.userDetails.email}';
+    final phone = '${widget.userDetails.phone}';
 
     return phoneVisible ? Container(
       color: colorGrey,
-      height: screenHeight / 2 - 54,
-      padding: EdgeInsets.only(left: 25, right: 25, top: 25),
+      height: screenHeight / 2 - 57,
+      margin: EdgeInsets.only(top: 3),
+      padding: EdgeInsets.only(top: 20, left: 25, right: 25),
       child: Row(
         children: <Widget>[
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Container( child: Text("Email :", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)) ),
-              SizedBox(height: 17),
-              Container( child: Text("Phone :", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)) ),
-            ],
-          ),
-          SizedBox(width: 40),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container( child: Text("Andy.holt@example.com", style: TextStyle(fontSize: 16, color: Colors.black)) ),
-              SizedBox(height: 17),
-              Container( child: Text("01-4971-0101", style: TextStyle(fontSize: 16, color: Colors.black)) ),
+              Container( child: Text("Phone Number", style: TextStyle(fontSize: 11, color: Colors.black)) ),
+              Container( child: Text(phone, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)) ),
+              SizedBox(height: 10),
+              Container( child: Text("Email Address", style: TextStyle(fontSize: 11, color: Colors.black)) ),
+              Container( child: Text(email, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)) ),
             ],
           )
         ],
@@ -263,40 +265,56 @@ class _UserDetailState extends State<UserDetail> {
   
   _renderAddressInfo() {
     final screenHeight = MediaQuery.of(context).size.height;
+    final street = '${widget.userDetails.location.street.number} - ${widget.userDetails.location.street.name}';
+    final city = '${widget.userDetails.location.city}';
+    final state = '${widget.userDetails.location.state}';
+    final country = '${widget.userDetails.location.country}';
 
     return addressVisible ? Container(
       color: colorGrey,
-      height: screenHeight / 2 - 54,
-      padding: EdgeInsets.only(left: 25, right: 25, top: 25),
+      height: screenHeight / 2 - 57,
+      margin: EdgeInsets.only(top: 3),
+      padding: EdgeInsets.only(top: 20, left: 25, right: 25),
       child: Row(
         children: <Widget>[
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Container( child: Text("Street :", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)) ),
-              SizedBox(height: 17),
-              Container( child: Text("City :", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)) ),
-              SizedBox(height: 17),
-              Container( child: Text("State :", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)) ),
-              SizedBox(height: 17),
-              Container( child: Text("Country :", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)) ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container( child: Text("Street", style: TextStyle(fontSize: 11, color: Colors.black)) ),
+                  Container( child: Text(street, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)) ),
+                ]
+              ),
+              SizedBox(height: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container( child: Text("State", style: TextStyle(fontSize: 11, color: Colors.black)) ),
+                  Container( child: Text(state, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)) ),
+                ]
+              ),
+              SizedBox(height: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container( child: Text("City", style: TextStyle(fontSize: 11, color: Colors.black)) ),
+                  Container( child: Text(city, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)) ),
+                ]
+              ),
+              SizedBox(height: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container( child: Text("Country", style: TextStyle(fontSize: 11, color: Colors.black)) ),
+                  Container( child: Text(country, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black)) ),
+                ]
+              ),
             ],
           ),
-          SizedBox(width: 40),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container( child: Text("963, Mcclellan Rd", style: TextStyle(fontSize: 16, color: Colors.black)) ),
-              SizedBox(height: 17),
-              Container( child: Text("Rockhampton", style: TextStyle(fontSize: 16, color: Colors.black)) ),
-              SizedBox(height: 17),
-              Container( child: Text("Western Australia", style: TextStyle(fontSize: 16, color: Colors.black)) ),
-              SizedBox(height: 17),
-              Container( child: Text("Australia", style: TextStyle(fontSize: 16, color: Colors.black)) ),
-            ],
-          )
         ],
-      ),
+      )
     ) : Container();
   }
 

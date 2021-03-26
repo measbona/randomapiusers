@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './user_detail.dart';
+import 'splash_screen.dart';
 
 void main() { 
   runApp(MyApp()); 
@@ -8,7 +8,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: UserDetail(),
+      home: SplashScreen(),
     );
   }
 }
