@@ -69,7 +69,7 @@ class _UserDetailState extends State<UserDetail> {
     final longitude = double.parse(widget.userDetails.location.coordinates.longitude);
 
     return Container(
-      height: 180,
+      height: 240,
       child: GoogleMap(
         mapType: MapType.terrain,
         initialCameraPosition: CameraPosition(
@@ -77,7 +77,9 @@ class _UserDetailState extends State<UserDetail> {
           zoom: 1,
         ),
         compassEnabled: false,
-        scrollGesturesEnabled: true,
+        zoomGesturesEnabled: false,
+        zoomControlsEnabled: false,
+        scrollGesturesEnabled: false,
         myLocationButtonEnabled: false,
         markers: _markers.values.toSet(),
       ),
@@ -88,7 +90,7 @@ class _UserDetailState extends State<UserDetail> {
     return Column(
       children: <Widget>[
         Container(
-          margin: EdgeInsets.only(top: 150),
+          margin: EdgeInsets.only(top: 180),
           width: MediaQuery.of(context).size.width,
           child: Container(
             decoration: BoxDecoration(
@@ -243,7 +245,7 @@ class _UserDetailState extends State<UserDetail> {
 
     return phoneVisible ? Container(
       color: colorGrey,
-      height: screenHeight / 2 - 57,
+      height: screenHeight / 2 - 87,
       margin: EdgeInsets.only(top: 3),
       padding: EdgeInsets.only(top: 20, left: 25, right: 25),
       child: Row(
@@ -272,7 +274,7 @@ class _UserDetailState extends State<UserDetail> {
 
     return addressVisible ? Container(
       color: colorGrey,
-      height: screenHeight / 2 - 57,
+      height: screenHeight / 2 - 87,
       margin: EdgeInsets.only(top: 3),
       padding: EdgeInsets.only(top: 20, left: 25, right: 25),
       child: Row(
