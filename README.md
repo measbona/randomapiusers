@@ -1,16 +1,8 @@
-# randomapiusers
+<p align="center">
+  <img width="345" height="345" src="https://drive.google.com/file/d/1LcOqzzSFrHys-MLfeurbt83au3kTNOh4/view?usp=sharing">
+</p>
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+**Random API Users** is and school assignment that purpose to learn about Flutter Frameworks.  
+ 
+  In this project, We have fetching data from <a href="https://randomuser.me/">randomuser.me</a> to list all the user as a card and also we created a detail screen   to see the information of each user.
+ 
