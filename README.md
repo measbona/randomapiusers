@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="345" height="345" src="https://drive.google.com/file/d/1LcOqzzSFrHys-MLfeurbt83au3kTNOh4/view?usp=sharing">
+  <img width="345" height="345" src="https://drive.google.com/file/d/1LcOqzzSFrHys-MLfeurbt83au3kTNOh4/preview">
 </p>
 
 **Random API Users** is and school assignment that purpose to learn about Flutter Frameworks.  
