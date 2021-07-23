@@ -16,6 +16,6 @@
   <img width="230" height="500" src="assets/screenshots/drawer.jpg">
  <div>
  <div style="display:inline-block">
-  <img width="230" height="500" src="assets/screenshots/drawer.jpg">
+  <img width="230" height="500" src="assets/screenshots/phone.jpg">
   <img width="230" height="500" src="assets/screenshots/address.jpg">
  </div>
